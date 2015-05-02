@@ -46,7 +46,7 @@ public class CreatorComponent {
 		if (component instanceof StudiumLabel)
 			setName("Label");
 		if (component instanceof StudiumTextField)
-			setName("Text Field");
+			setName("TextField");
 	}
 	
 	//Update
@@ -116,6 +116,8 @@ public class CreatorComponent {
 		ScreenEditor.componentName.setText(getName());
 		ScreenEditor.componentX.setText(""+getPosition().x);
 		ScreenEditor.componentY.setText(""+getPosition().y);
+		ScreenEditor.compWidth.setText(""+getWidth());
+		ScreenEditor.compHeight.setText(""+getHeight());
 	}
 	
 	//Getters & Setters
@@ -130,7 +132,6 @@ public class CreatorComponent {
 	
 	public Vector2 getPosition() 
 	{
-//		System.out.println(ScreenEditor.wWidth/2 - UserInterface.width/2 + this.position.x);
 		return this.position;
 	}
 	public Vector2 getPositionFixed() 

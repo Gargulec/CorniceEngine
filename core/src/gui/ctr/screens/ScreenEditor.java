@@ -1,22 +1,23 @@
 package gui.ctr.screens;
 
-import javafx.stage.FileChooser;
 import gui.ctr.Main;
 import gui.ctr.UserInterface;
 import gui.ctr.app.component.CreatorComponent;
+import gui.ctr.app.export.Export;
 import gui.ctr.app.screen.CreatorScreen;
 import gui.ctr.buttons.AddButton;
 import gui.ctr.buttons.AddComponent;
 import gui.ctr.buttons.AddLabel;
 import gui.ctr.buttons.AddTextField;
-import gui.ctr.buttons.CreatorButton;
 import gui.ctr.buttons.LoadTexture;
+import gui.ctr.buttons.PlayButton;
 import gui.ctr.lists.ComponentsList;
-import gui.ctr.lists.CreatorList;
 import gui.ctr.textfields.CompText;
 import gui.ctr.textfields.CompTextX;
 import gui.ctr.textfields.CompTextY;
+import gui.ctr.textfields.FieldCompHeight;
 import gui.ctr.textfields.FieldCompName;
+import gui.ctr.textfields.FieldCompWidth;
 import gui.ctr.textfields.FieldCompX;
 import gui.ctr.textfields.FieldCompY;
 
@@ -25,7 +26,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
-import lib.gui.CorniceLabeledField;
 import lib.gui.StudiumComponent;
 import lib.gui.StudiumLabel;
 import lib.gui.StudiumScreen;
@@ -54,12 +54,15 @@ public class ScreenEditor extends StudiumScreen{
 		public static AddLabel addLabel;
 		public static AddTextField addTextField;
 		public static AddButton addButton;
+		public static PlayButton playButton;
 	/**RIGHT PANEL**/
 	public static StudiumComponent rightPanel;
 		//Properities
 		public static FieldCompName componentName;
 		public static FieldCompX componentX;
 		public static FieldCompY componentY;
+		public static FieldCompWidth compWidth;
+		public static FieldCompHeight compHeight;
 		public static ComponentsList componentsList;
 		public static LoadTexture loadTexture;
 		public static CompText compText;
@@ -90,6 +93,9 @@ public class ScreenEditor extends StudiumScreen{
 		addButton = new AddButton(270, 10);
 		addToolbar.add(addButton);
 		add(toolbar);
+		//Button - Play Button
+		playButton = new PlayButton(490, 10);
+		toolbar.add(playButton);
 		//Right panel
 		rightPanel = new StudiumComponent(Gdx.graphics.getWidth() - 200, 0, 200, Gdx.graphics.getHeight());
 		componentName = new FieldCompName(10, 10);
@@ -101,19 +107,24 @@ public class ScreenEditor extends StudiumScreen{
 		rightPanel.add(componentName);
 		rightPanel.add(componentX);
 		rightPanel.add(componentY);
+		//Component SIZE
+		compWidth = new FieldCompWidth(10, 160);
+		rightPanel.add(compWidth);
+		compHeight = new FieldCompHeight(70, 160);
+		rightPanel.add(compHeight);
 		//Load Texture button
-		loadTexture = new LoadTexture(10, 160);
+		loadTexture = new LoadTexture(10, 210);
 		rightPanel.add(loadTexture);
-		rightPanel.add(new StudiumLabel(10, 183, "Texture", Main.font));
+		rightPanel.add(new StudiumLabel(10, 233, "Texture", Main.font));
 		//Component text
-		compText = new CompText(10, 213);
+		compText = new CompText(10, 263);
 		compText.setVisible(false);
 		rightPanel.add(compText);
 		//Component text offset
-		compTextX = new CompTextX(10, 263);
+		compTextX = new CompTextX(10, 313);
 		compTextX.setVisible(false);
 		rightPanel.add(compTextX);
-		compTextY = new CompTextY(60, 263);
+		compTextY = new CompTextY(60, 313);
 		compTextY.setVisible(false);
 		rightPanel.add(compTextY);
 		//List of components
@@ -132,49 +143,60 @@ public class ScreenEditor extends StudiumScreen{
 	//Component selected
 	public static void componentSelected()
 	{
-		if(selectedComponent == null)
+		if(!fileChooser.isVisible())
 		{
-			componentName.setText("");
-			componentName.setActive(false);
-			componentX.setText("");
-			componentX.setActive(false);
-			componentY.setText("");
-			componentY.setActive(false);
-			
-			compText.setVisible(false);
-			compTextX.setVisible(false);
-			compTextY.setVisible(false);
-		}
-		else
-		{
-			componentName.setActive(true);
-			componentX.setActive(true);
-			componentY.setActive(true);
-			
-			
-			compTextX.setVisible(true);
-			compTextY.setVisible(true);
-			
-			componentName.setText(selectedComponent.getName());
-			//Compontent Text
-			if(selectedComponent.getComponent() instanceof StudiumLabel)
+			//Unselecting component
+			if(selectedComponent == null)
 			{
-				compText.setVisible(true);
-				compText.setText(((StudiumLabel)selectedComponent.getComponent()).getText());
-			}
-			else
+				componentName.setText("");
+				componentName.setActive(false);
+				componentX.setText("");
+				componentX.setActive(false);
+				componentY.setText("");
+				componentY.setActive(false);
+				
+				compWidth.setText("");
+				compWidth.setActive(false);
+				compHeight.setText("");
+				compHeight.setActive(false);
+				
 				compText.setVisible(false);
-			//Component Text offset
-			if(selectedComponent.getComponent() instanceof StudiumTextField)
-			{
-				compTextX.setVisible(true);
-				compTextX.setText(""+((StudiumTextField)selectedComponent.getComponent()).getTextOffset().x);
-				compTextY.setVisible(true);
-				compTextY.setText(""+((StudiumTextField)selectedComponent.getComponent()).getTextOffset().y);
-			}
-			else{
 				compTextX.setVisible(false);
 				compTextY.setVisible(false);
+			}
+			else
+			{
+				componentName.setActive(true);
+				componentX.setActive(true);
+				componentY.setActive(true);
+				
+				compWidth.setActive(true);
+				compHeight.setActive(true);
+				
+				compTextX.setVisible(true);
+				compTextY.setVisible(true);
+				
+				componentName.setText(selectedComponent.getName());
+				//Compontent Text
+				if(selectedComponent.getComponent() instanceof StudiumLabel)
+				{
+					compText.setVisible(true);
+					compText.setText(((StudiumLabel)selectedComponent.getComponent()).getText());
+				}
+				else
+					compText.setVisible(false);
+				//Component Text offset
+				if(selectedComponent.getComponent() instanceof StudiumTextField)
+				{
+					compTextX.setVisible(true);
+					compTextX.setText(""+((StudiumTextField)selectedComponent.getComponent()).getTextOffset().x);
+					compTextY.setVisible(true);
+					compTextY.setText(""+((StudiumTextField)selectedComponent.getComponent()).getTextOffset().y);
+				}
+				else{
+					compTextX.setVisible(false);
+					compTextY.setVisible(false);
+				}
 			}
 		}
 	}
@@ -240,10 +262,19 @@ public class ScreenEditor extends StudiumScreen{
 		
 	}
 	
+	public boolean keyDown(int keycode) 
+	{
+		System.err.println(keycode);
+		if(keycode == 248)
+			Export.createApp();
+		
+		return super.keyDown(keycode);
+	}
+	
 	//Screen clicked
 	public void screenClicked(int button) 
 	{
-		if(Gdx.input.getX() <= wWidth)
+		if(!fileChooser.isVisible() && Gdx.input.getX() <= wWidth)
 			selectedComponent = null;
 		
 		float mX = Gdx.input.getX();

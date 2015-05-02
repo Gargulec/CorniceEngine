@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class CreatorScreen {
 
 	//Name
-	private String name;
+	private String name = "MainScreen";
 	//List of components
 	private ArrayList<CreatorComponent> components = new ArrayList<CreatorComponent>();
 

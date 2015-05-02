@@ -2,7 +2,6 @@ package gui.ctr;
 
 import lib.gui.StudiumLabel;
 import lib.gui.StudiumScreen;
-import lib.gui.StudiumTextField;
 import gui.ctr.app.screen.CreatorScreen;
 import gui.ctr.screens.ScreenEditor;
 

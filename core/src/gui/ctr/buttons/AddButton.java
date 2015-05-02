@@ -12,7 +12,7 @@ public class AddButton extends CreatorButton{
 	//Constructor
 	public AddButton(float x, float y)
 	{
-		super(x, y, "Button");
+		super(x, y, "Component");
 	}
 
 	//Clicked
